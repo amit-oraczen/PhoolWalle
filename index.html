@@ -3,133 +3,549 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Garden to God | Fresh Flower for Every Prayer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Phoolwalle | Garden to God - Flower Delivery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-        h1, h2, h3 { font-family: 'Playfair Display', serif; }
-        .hero-gradient { background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), url('https://images.unsplash.com/photo-1590732488390-3693f185799e?auto=format&fit=crop&q=80&w=1200'); background-size: cover; background-position: center; }
+        :root {
+            --primary: #2d6a4f; /* Green-900 from indexv1 */
+            --accent: #ea580c; /* Orange-600 from indexv1 */
+            --dark: #2d3436;
+            --light: #f9faf8;
+            /* Set the Home hero background here. Replace the URL with your custom image if you want. */
+            --hero-img: url('Images/home_bg.PNG');
+            /*url('https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1600&q=80');*/
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; color: #333; line-height: 1.6; }
+
+        /* --- Navigation --- */
+        header { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .top-bar { background: var(--accent); color: white; text-align: center; padding: 8px; font-size: 14px; font-weight: 500; }
+        .nav-container { display: flex; align-items: center; justify-content: space-between; padding: 14px 5%; position: relative; }
+        .logo img { height: 100px; width: auto; }
+        .nav-links a { margin: 0 18px; text-decoration: none; color: var(--dark); font-weight: 700; text-transform: uppercase; font-size: 18px; letter-spacing: 0.5px; }
+        .nav-links a:hover { color: var(--accent); }
+        .icons i { font-size: 20px; margin-left: 20px; color: var(--primary); cursor: pointer; transition: 0.2s; position: relative; }
+        .icons i:hover { color: var(--accent); }
+        
+        /* --- Cart Badge --- */
+        .cart-badge { position: absolute; top: -8px; right: -8px; background: #ea580c; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        
+        /* --- Search Dropdown --- */
+        .search-dropdown { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); background: white; border: 2px solid var(--primary); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); padding: 15px; width: 320px; z-index: 999; display: none; }
+        .search-dropdown.active { display: block; }
+        .search-dropdown input { width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; box-sizing: border-box; }
+        .search-dropdown button { background: var(--primary); color: white; padding: 10px 16px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.2s; }
+        .search-dropdown button:hover { background: #1f5233; }
+        .search-dropdown #searchResults { margin-top: 10px; font-size: 13px; color: #666; max-height: 150px; overflow-y: auto; }
+        
+        /* --- Cart Sidebar --- */
+        .cart-sidebar { position: fixed; right: -350px; top: 0; width: 350px; height: 100vh; background: white; box-shadow: -2px 0 10px rgba(0,0,0,0.2); transition: 0.3s; z-index: 2000; overflow-y: auto; }
+        .cart-sidebar.active { right: 0; }
+        .cart-header { padding: 20px; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center; }
+        .cart-items { padding: 20px; }
+        .cart-empty { text-align: center; padding: 40px 20px; color: #999; }
+        .cart-item { padding: 15px; border-bottom: 1px solid #eee; }
+        .cart-item-name { font-weight: 700; color: var(--primary); }
+        .cart-item-price { color: #666; font-size: 14px; }
+        
+        /* --- Chatbot --- */
+        .chatbot-container { position: fixed; bottom: 20px; right: 20px; z-index: 1999; }
+        .chatbot-widget { background: rgba(255, 255, 255, 0.95); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: 200px; max-height: 500px; display: flex; flex-direction: column; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .chatbot-header { background: var(--primary); color: white; padding: 15px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
+        .chatbot-close { background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+        .chatbot-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .chatbot-message { background: #f0f0f0; padding: 10px 15px; border-radius: 8px; font-size: 14px; color: #333; max-width: 90%; }
+        .chatbot-message.bot { background: #e8f5e9; border-left: 3px solid var(--primary); }
+        .chatbot-options { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .chatbot-btn { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; text-align: left; transition: 0.2s; font-size: 13px; }
+        .chatbot-btn:hover { background: #1f5233; }
+
+        /* --- Hero Section --- */
+        .hero { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), var(--hero-img); 
+            height: 450px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: white; text-align: center; }
+        .hero h1 { font-size: 48px; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .hero p { font-size: 20px; font-weight: 300; color: #FFFFFF;}
+
+        /* --- Sections --- */
+        .section-title { text-align: center; margin-top: 60px; font-size: 32px; color: var(--primary); position: relative; padding-bottom: 10px; }
+        .section-title::after { content: ''; width: 60px; height: 3px; background: var(--accent); position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
+
+        /* --- Categories --- */
+        .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; padding: 40px 5%; text-align: center; }
+        .cat-item { cursor: pointer; transition: 0.3s; }
+        .cat-item img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #f0f0f0; transition: 0.3s; }
+        .cat-item:hover img { border-color: var(--primary); transform: scale(1.05); }
+        .cat-item h4 { margin-top: 15px; font-size: 16px; font-weight: 600; }
+
+        /* --- Products --- */
+        .product-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 40px 5%; }
+        .product-card { border: 1px solid #eee; border-radius: 12px; overflow: hidden; transition: 0.3s; background: white; }
+        .product-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .product-card img { width: 100%; height: 280px; object-fit: cover; }
+        .p-info { padding: 20px; text-align: center; }
+        .p-info h3 { margin: 0 0 10px; font-size: 18px; }
+        .p-price { font-weight: bold; color: #1f5233; font-size: 22px; margin-bottom: 15px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-buy { background: #25D366; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; flex: 1; }
+        .btn-buy:hover { background: #1ebe57; }
+        .btn-cart { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; flex: 1; transition: 0.3s; }
+        .btn-cart:hover { background: #1f5233; }
+
+        /* --- Purity Section --- */
+        #purity { background: #f0fdf4; padding: 60px 0; }
+        .purity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; padding: 40px 5%; }
+        .purity-card { background: #f8f9fa; padding: 30px; border-radius: 12px; border: 1px solid #e8eef5; text-align: center; transition: 0.3s; }
+        .purity-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .purity-icon { font-size: 48px; margin-bottom: 15px; }
+        .purity-card h3 { color: #1f5233; font-size: 20px; margin: 15px 0; font-weight: 700; }
+        .purity-card p { color: #374151; font-size: 14px; line-height: 1.6; }
+
+        /* --- Footer & Map --- */
+        footer { background: #1a1a1a; color: #ccc; padding: 60px 5% 20px; margin-top: 80px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
+        .footer-h3 { color: white; margin-bottom: 20px; font-size: 20px; }
+        .map-container { border-radius: 8px; overflow: hidden; border: 2px solid #333; height: 350px; }
+        
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 32px; }
+        }
     </style>
 </head>
-<body class="bg-stone-50 text-stone-900">
+<body>
 
-    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm px-6 py-4">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <img src="Logo.PNG" alt="Garden to God Logo" class="h-16 w-auto">
-            </div>
-            <div class="hidden md:flex space-x-8 font-medium text-stone-600">
-                <a href="#home" class="hover:text-orange-600 transition">Home</a>
-                <a href="#about" class="hover:text-orange-600 transition">Our Purity</a>
-                <a href="#contact" class="hover:text-orange-600 transition">Contact</a>
-            </div>
-            <a href="https://wa.me/917992650041" class="bg-orange-500 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-orange-600 transition shadow-md">
-                Order Now
-            </a>
+<div class="top-bar">✨ Same Day Fresh Flower Delivery - Order Now!</div>
+
+<header>
+    <div class="nav-container">
+        <a href="#" class="logo">
+            <img src="Images/logo_2.png" alt="Phoolwalle Logo" onerror="this.style.display='none'; this.parentNode.innerText='PHOOLWALLE'">
+        </a>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#purity">Our Purity</a>
+            <a href="#products">Products</a>
+            <a href="#contact">Contact</a>
         </div>
-    </nav>
-
-    <header id="home" class="hero-gradient min-h-[80vh] flex items-center justify-center text-center px-6">
-        <div class="max-w-3xl">
-            <span class="text-orange-600 font-semibold tracking-widest uppercase text-sm">Bhubaneswar's Purest Blooms</span>
-            <h1 class="text-5xl md:text-7xl mt-4 mb-6 text-green-900 leading-tight">Fresh Flower for Every Prayer</h1>
-            <p class="text-xl text-stone-700 mb-10 leading-relaxed">Directly from our garden to your altar. We deliver purity and freshness daily for your morning rituals.</p>
-            <div class="flex flex-col md:flex-row gap-4 justify-center">
-                <a href="#contact" class="bg-green-800 text-white px-10 py-4 rounded-md text-lg font-semibold hover:bg-green-900 transition">Get Daily Delivery</a>
-                <a href="tel:+917992650041" class="bg-white border-2 border-green-800 text-green-800 px-10 py-4 rounded-md text-lg font-semibold hover:bg-green-50 transition">Call: 7992650041</a>
+        <div class="icons">
+            <i class="fa fa-search" onclick="openSearch()"></i>
+            <div style="position: relative; display: inline-block;">
+                <i class="fa fa-shopping-bag" onclick="openCart()"></i>
+                <div class="cart-badge" id="cartBadge" style="display: none;">0</div>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
-    <section id="about" class="py-24 px-6 max-w-6xl mx-auto">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl text-green-900 mb-4">Garden-to-God Promise</h2>
-            <div class="h-1 w-20 bg-orange-400 mx-auto"></div>
+<section id="home" class="hero">
+    <div>
+        <span style="color: var(--primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px;">Bhubaneswar's Purest Blooms</span>
+        <h1>Fresh Flower for Every Prayer</h1>
+        <p>Directly from our garden to your altar. We deliver purity and freshness daily for your morning rituals.</p>
+
+        <div style="display:flex; gap:12px; margin-top:20px; justify-content:center; flex-wrap:wrap;">
+            <a href="#contact" style="background: var(--primary); color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 700;">Get Daily Delivery</a>
+            <a href="tel:+91-7992650041" style="background: white; color: var(--dark); padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; border: 2px solid rgba(0,0,0,0.06);">Call: +91-7992650041</a>
         </div>
-        <div class="grid md:grid-cols-3 gap-12">
-            <div class="bg-white p-8 rounded-2xl shadow-sm border border-stone-100 hover:shadow-md transition">
-                <div class="text-4xl mb-6">🌅</div>
-                <h3 class="text-2xl mb-4 text-green-800">Dawn Picking</h3>
-                <p class="text-stone-600 leading-relaxed">Our flowers are plucked at the first light of day to ensure they stay fresh throughout your puja ceremonies.</p>
-            </div>
-            <div class="bg-white p-8 rounded-2xl shadow-sm border border-stone-100 hover:shadow-md transition">
-                <div class="text-4xl mb-6">✨</div>
-                <h3 class="text-2xl mb-4 text-green-800">Zero Chemical</h3>
-                <p class="text-stone-600 leading-relaxed">We provide natural, untreated flowers. Only the purest petals for your devotion to the Almighty.</p>
-            </div>
-            <div class="bg-white p-8 rounded-2xl shadow-sm border border-stone-100 hover:shadow-md transition">
-                <div class="text-4xl mb-6">🏠</div>
-                <h3 class="text-2xl mb-4 text-green-800">Doorstep Grace</h3>
-                <p class="text-stone-600 leading-relaxed">Reliable delivery across Bhubaneswar, ensuring your prayer room never lacks the fragrance of fresh blooms.</p>
-            </div>
+    </div>
+</section>
+
+<section id="purity">
+    <h2 class="section-title">Our Purity</h2>
+    <div class="purity-grid">
+        <div class="purity-card">
+            <div class="purity-icon">🌅</div>
+            <h3>Fresh Flowers</h3>
+            <p>Our flowers are handpicked fresh daily to ensure maximum freshness and longevity for your special moments.</p>
         </div>
-    </section>
+        <div class="purity-card">
+            <div class="purity-icon">✨</div>
+            <h3>Premium Quality</h3>
+            <p>We source only the finest blooms from trusted gardens. Each flower is selected with care for beauty and fragrance.</p>
+        </div>
+        <div class="purity-card">
+            <div class="purity-icon">🚚</div>
+            <h3>Same Day Delivery</h3>
+            <p>Fast and reliable delivery across the city. Your flowers arrive fresh and ready to brighten any occasion.</p>
+        </div>
+    </div>
+</section>
 
-    <section id="contact" class="py-20 px-6 bg-green-50">
-        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-            
-            <div class="space-y-8">
-                <div>
-                    <h2 class="text-4xl text-green-900 mb-2">Connect With Us</h2>
-                    <p class="text-stone-600">Reach out to start your monthly subscription or for bulk ritual orders.</p>
-                </div>
-
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-4">
-                        <div class="bg-white p-3 rounded-full shadow-sm text-xl">👤</div>
-                        <div>
-                            <p class="text-xs uppercase text-stone-400 font-bold">Proprietor</p>
-                            <p class="text-lg font-semibold">Parsuram Pradhan</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center space-x-4">
-                        <div class="bg-white p-3 rounded-full shadow-sm text-xl">📍</div>
-                        <div>
-                            <p class="text-xs uppercase text-stone-400 font-bold">Address</p>
-                            <p class="text-lg">Plot No-, Sailashree Vihar, Bhubaneswar - 751021</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center space-x-4">
-                        <div class="bg-white p-3 rounded-full shadow-sm text-xl">📞</div>
-                        <div>
-                            <p class="text-xs uppercase text-stone-400 font-bold">Phone</p>
-                            <p class="text-lg font-bold text-green-800">+91 7992650041</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="pt-4">
-                    <a href="https://wa.me/917992650041" class="inline-flex items-center space-x-2 bg-green-600 text-white px-8 py-4 rounded-lg font-bold hover:bg-green-700 transition">
-                        <span>Message on WhatsApp</span>
+<section id="products">
+    <h2 class="section-title">Products</h2>
+    <div class="product-container">
+        <div class="product-card">
+            <img src="Images/Daily_puja.png" alt="Daily Puja Flowers Pack">
+            <div class="p-info">
+                <h3>Daily Puja Flowers Pack</h3>
+                <div class="p-price">₹8.99/day</div>
+                <div class="btn-group">
+                    <button class="btn-cart" onclick="addToCart('Daily Puja Flowers Pack', '₹8.99/day')">
+                        <i class="fa fa-shopping-bag"></i> Add to Cart
+                    </button>
+                    <a href="https://wa.me/917992650041?text=I want to order Daily Puja Flowers" class="btn-buy" style="flex: 1; text-decoration: none;">
+                        <i class="fab fa-whatsapp"></i> Order
                     </a>
                 </div>
             </div>
+        </div>
 
-            <div class="rounded-3xl overflow-hidden shadow-2xl h-[450px] border-8 border-white">
+        <div class="product-card">
+            <img src="Images/Decor_2.png" alt="Festive & Temple Decor">
+            <div class="p-info">
+                <h3>Festive & Temple Décor</h3>
+                <div class="p-price">Custom Pricing</div>
+                <div class="btn-group">
+                    <button class="btn-cart" onclick="addToCart('Festive & Temple Décor', 'Custom Pricing')">
+                        <i class="fa fa-shopping-bag"></i> Add to Cart
+                    </button>
+                    <a href="https://wa.me/917992650041?text=I want Festive%20%26%20Temple%20Decor%20quote" class="btn-buy" style="flex: 1; text-decoration: none;">
+                        <i class="fab fa-whatsapp"></i> Order
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="Images/Bouquet.png" alt="Handcrafted Bouquets">
+            <div class="p-info">
+                <h3>Handcrafted Bouquets</h3>
+                <div class="p-price">From ₹399/- Onwards</div>
+                <div class="btn-group">
+                    <button class="btn-cart" onclick="addToCart('Handcrafted Bouquets', 'From ₹399/- Onwards')">
+                        <i class="fa fa-shopping-bag"></i> Add to Cart
+                    </button>
+                    <a href="https://wa.me/917992650041?text=I want to order Handcrafted%20Bouquets" class="btn-buy" style="flex: 1; text-decoration: none;">
+                        <i class="fab fa-whatsapp"></i> Order
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer id="contact">
+    <div class="footer-grid">
+        <div>
+            <h3 class="footer-h3">Contact Our Office</h3>
+            <p style="font-size: 15px;">
+                <i class="fa fa-map-marker-alt" style="color: var(--primary); margin-right: 10px;"></i>
+                <strong>Phoolwalle Office:</strong><br>
+                Plot No: LC-129/13, Sailashree Vihar,<br>
+                Patia, Bhubaneswar - 751021
+            </p>
+            <p style="font-size: 15px;">
+                <i class="fa fa-phone" style="color: var(--primary); margin-right: 10px;"></i>
+                +91 7992650041
+            </p>
+            <p style="font-size: 15px;">
+                <i class="fa fa-envelope" style="color: var(--primary); margin-right: 10px;"></i>
+                phoolwalle@gmail.com
+            </p>
+            <div style="margin-top: 20px;">
+                <a href="https://wa.me/917992650041" style="background: #25D366; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s;">
+                    <i class="fab fa-whatsapp"></i> Message on WhatsApp
+                </a>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="footer-h3">Find Us Here</h3>
+            <div class="map-container">
                 <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3740.7812836284683!2d85.8083!3d20.33!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a190916428e5d9d%3A0xc3f6e9b4662d5e!2sSailashree%20Vihar%2C%20Bhubaneswar%2C%20Odisha%20751021!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
-                    width="100%" 
-                    height="100%" 
-                    style="border:0;" 
-                    allowfullscreen="" 
-                    loading="lazy">
+                    src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3741.136903043282!2d85.80899427523786!3d20.33596228114569!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjDCsDIwJzA5LjUiTiA4NcKwNDgnNDEuNyJF!5e0!3m2!1sen!2sin!4v1766665243961!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
                 </iframe>
             </div>
-
         </div>
-    </section>
+    </div>
+    
+    <div style="text-align: center; margin-top: 50px; border-top: 1px solid #333; padding-top: 20px; font-size: 13px;">
+        &copy; 2025 Phoolwalle.com | Garden to God.
+    </div>
+</footer>
 
-    <footer class="bg-stone-900 text-stone-400 py-12 px-6 text-center">
-        <div class="max-w-6xl mx-auto">
-            <h3 class="text-white text-2xl mb-4 italic">Garden to God</h3>
-            <p class="mb-6 italic">"Fresh Flower for Every Prayer"</p>
-            <div class="h-px bg-stone-800 w-full mb-8"></div>
-            <p class="text-sm">© 2025 Garden to God. Designed with devotion by Parsuram Pradhan.</p>
+<!-- Search Dropdown -->
+<div class="search-dropdown" id="searchDropdown">
+    <input type="text" id="searchInput" placeholder="Search for flowers...">
+    <button onclick="performSearch()">Search</button>
+    <div id="searchResults"></div>
+</div>
+
+<!-- Cart Sidebar -->
+<div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+        <h3>Shopping Cart</h3>
+        <span class="close-btn" onclick="closeCart()" style="margin-top: -5px;">&times;</span>
+    </div>
+    <div class="cart-items" id="cartItems">
+        <div class="cart-empty">Your cart is empty</div>
+    </div>
+    <div style="padding: 20px; border-top: 1px solid #eee;">
+        <button onclick="checkoutCart()" style="background: #25D366; color: white; padding: 12px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; width: 100%;">Order via WhatsApp</button>
+    </div>
+</div>
+
+<!-- Chatbot Widget -->
+<div class="chatbot-container">
+    <div class="chatbot-widget" id="chatbotWidget">
+        <div class="chatbot-header">
+            <span>👩 </span>
+            <button class="chatbot-close" onclick="closeChatbot()">&times;</button>
         </div>
-    </footer>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="chatbot-message bot">Hi, I'm Rosy! 👋 How can I help you today?</div>
+        </div>
+        <div class="chatbot-options" id="chatbotOptions">
+            <button class="chatbot-btn" onclick="handleChatOption('question')">❓ I have a question</button>
+            <button class="chatbot-btn" onclick="handleChatOption('products')">🌸 Select from products</button>
+            <button class="chatbot-btn" onclick="handleChatOption('callback')">📞 Call me back</button>
+        </div>
+    </div>
+</div>
 
-</body>
-</html>
+<script>
+    let cart = [];
+    
+    // Search functionality
+    function openSearch() {
+        const dropdown = document.getElementById('searchDropdown');
+        dropdown.classList.toggle('active');
+        if (dropdown.classList.contains('active')) {
+            document.getElementById('searchInput').focus();
+        }
+    }
+    
+    function closeSearch() {
+        document.getElementById('searchDropdown').classList.remove('active');
+        document.getElementById('searchResults').innerHTML = '';
+    }
+    
+    function performSearch() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const products = [
+            { name: 'Daily Puja Flowers Pack', price: '₹8.99/day' },
+            { name: 'Festive & Temple Décor', price: 'Custom Pricing' },
+            { name: 'Handcrafted Bouquets', price: 'From ₹399/- Onwards' }
+        ];
+        
+        const results = products.filter(p => p.name.toLowerCase().includes(query));
+        const resultsDiv = document.getElementById('searchResults');
+        
+        if (results.length > 0) {
+            resultsDiv.innerHTML = '<strong style="display: block; margin-bottom: 8px;">Found ' + results.length + ' result(s):</strong>' + 
+                results.map(r => '<div style="padding: 5px 0; border-bottom: 1px solid #eee;">' + r.name + '<br><span style="color: #1f5233; font-weight: 700;">' + r.price + '</span></div>').join('');
+        } else if (query.length > 0) {
+            resultsDiv.innerHTML = 'No products found. Try: "flowers", "puja", "bouquet", "decor"';
+        } else {
+            resultsDiv.innerHTML = '';
+        }
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        const searchIcon = document.querySelector('.fa-search');
+        const dropdown = document.getElementById('searchDropdown');
+        if (e.target !== searchIcon && !dropdown.contains(e.target)) {
+            closeSearch();
+        }
+    });
+    
+    // Cart functionality
+    function openCart() {
+        document.getElementById('cartSidebar').classList.add('active');
+    }
+    
+    function closeCart() {
+        document.getElementById('cartSidebar').classList.remove('active');
+    }
+    
+    function addToCart(productName, productPrice) {
+        cart.push({ name: productName, price: productPrice });
+        updateCartDisplay();
+    }
+    
+    function updateCartDisplay() {
+        const cartItems = document.getElementById('cartItems');
+        const badge = document.getElementById('cartBadge');
+        
+        // Update badge
+        if (cart.length === 0) {
+            badge.style.display = 'none';
+            cartItems.innerHTML = '<div class="cart-empty">Your cart is empty</div>';
+        } else {
+            badge.style.display = 'flex';
+            badge.textContent = cart.length;
+            cartItems.innerHTML = cart.map((item, index) => 
+                '<div class="cart-item">' +
+                '<div class="cart-item-name">' + item.name + '</div>' +
+                '<div class="cart-item-price">' + item.price + '</div>' +
+                '<button onclick="removeFromCart(' + index + ')" style="background: #f3f4f6; border: 1px solid #ddd; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-top: 8px;">Remove</button>' +
+                '</div>'
+            ).join('');
+        }
+    }
+    
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartDisplay();
+    }
+    
+    function checkoutCart() {
+        if (cart.length === 0) {
+            alert('Your cart is empty!');
+            return;
+        }
+        const message = 'I would like to order: ' + cart.map(item => item.name + ' (' + item.price + ')').join(', ');
+        window.location.href = 'https://wa.me/917992650041?text=' + encodeURIComponent(message);
+    }
+    
+    // Allow search on Enter key
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performSearch();
+            });
+        }
+        // Show chatbot on page load
+        showChatbot();
+    });
+    
+    // Chatbot functionality
+    function showChatbot() {
+        const widget = document.getElementById('chatbotWidget');
+        if (widget) {
+            widget.style.display = 'flex';
+        }
+    }
+    
+    function closeChatbot() {
+        const widget = document.getElementById('chatbotWidget');
+        if (widget) {
+            widget.style.display = 'none';
+        }
+    }
+    
+    function addChatMessage(text, isBot = true) {
+        const messagesDiv = document.getElementById('chatbotMessages');
+        const messageEl = document.createElement('div');
+        messageEl.className = 'chatbot-message' + (isBot ? ' bot' : '');
+        messageEl.textContent = text;
+        messagesDiv.appendChild(messageEl);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+    
+    function handleChatOption(option) {
+        const optionsDiv = document.getElementById('chatbotOptions');
+        optionsDiv.innerHTML = ''; // Clear options
+        
+        if (option === 'question') {
+            addChatMessage('You: I have a question');
+            addChatMessage('What would you like to know? 😊');
+            optionsDiv.innerHTML = `
+                <textarea id="questionInput" placeholder="Type your question..." style="padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; resize: vertical; min-height: 60px;"></textarea>
+                <button class="chatbot-btn" onclick="sendQuestion()">Send Question</button>
+                <button class="chatbot-btn" style="background: #999;" onclick="backToMenu()">← Back</button>
+            `;
+        } else if (option === 'products') {
+            addChatMessage('You: Show me products');
+            addChatMessage('Great! Here are our popular products: 🌸');
+            optionsDiv.innerHTML = `
+                <button class="chatbot-btn" onclick="handleProduct('Daily Puja Flowers Pack', '₹8.99/day')">📿 Daily Puja Flowers Pack</button>
+                <button class="chatbot-btn" onclick="handleProduct('Festive & Temple Décor', 'Custom Pricing')">✨ Festive & Temple Décor</button>
+                <button class="chatbot-btn" onclick="handleProduct('Handcrafted Bouquets', 'From ₹399/- Onwards')">💐 Handcrafted Bouquets</button>
+                <button class="chatbot-btn" style="background: #999;" onclick="backToMenu()">← Back</button>
+            `;
+        } else if (option === 'callback') {
+            addChatMessage('You: Call me back');
+            addChatMessage('Sure! Please share your phone number and best time to call.');
+            optionsDiv.innerHTML = `
+                <input type="text" id="phoneInput" placeholder="Enter your phone number" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit;">
+                <input type="text" id="timeInput" placeholder="Best time to call (e.g., 10-11 AM)" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; margin-top: 5px;">
+                <button class="chatbot-btn" onclick="submitCallback()">Request Callback</button>
+                <button class="chatbot-btn" style="background: #999;" onclick="backToMenu()">← Back</button>
+            `;
+        }
+    }
+    
+    function backToMenu() {
+        const messagesDiv = document.getElementById('chatbotMessages');
+        const optionsDiv = document.getElementById('chatbotOptions');
+        messagesDiv.innerHTML = '<div class="chatbot-message bot">Hi, I\'m Rosy! 👋 How can I help you today?</div>';
+        optionsDiv.innerHTML = `
+            <button class="chatbot-btn" onclick="handleChatOption('question')">❓ I have a question</button>
+            <button class="chatbot-btn" onclick="handleChatOption('products')">🌸 Select from products</button>
+            <button class="chatbot-btn" onclick="handleChatOption('callback')">📞 Call me back</button>
+        `;
+    }
+    
+    function sendQuestion() {
+        const input = document.getElementById('questionInput');
+        const question = input.value.trim();
+        if (!question) {
+            alert('Please enter your question!');
+            return;
+        }
+        addChatMessage('Your question has been received! 📨');
+        addChatMessage('Thank you for reaching out. Our team will respond to your question soon! 🙏');
+        const optionsDiv = document.getElementById('chatbotOptions');
+        optionsDiv.innerHTML = `
+            <button class="chatbot-btn" onclick="continueOnWhatsApp('Question: ${question}')">💬 Continue on WhatsApp</button>
+            <button class="chatbot-btn" style="background: #999;" onclick="backToMenu()">← Back to Menu</button>
+        `;
+    }
+    
+    function handleProduct(productName, price) {
+        addChatMessage('You: ' + productName);
+        addChatMessage('Nice choice! 🌸 ' + productName + ' - ' + price);
+        const optionsDiv = document.getElementById('chatbotOptions');
+        optionsDiv.innerHTML = `
+            <button class="chatbot-btn" onclick="addToCartAndConfirm('${productName}', '${price}')">🛒 Add to Cart</button>
+            <button class="chatbot-btn" onclick="continueOnWhatsApp('I want: ${productName} (${price})')" style="background: #25D366;">💬 Order on WhatsApp</button>
+            <button class="chatbot-btn" style="background: #999;" onclick="backToMenu()">← Back</button>
+        `;
+    }
+    
+    function addToCartAndConfirm(productName, price) {
+        addToCart(productName, price);
+        addChatMessage('✅ Added to cart!');
+        const optionsDiv = document.getElementById('chatbotOptions');
+        optionsDiv.innerHTML = `
+            <button class="chatbot-btn" onclick="continueOnWhatsApp('Cart items: ${productName}')" style="background: #25D366;">📤 Proceed to Checkout</button>
+            <button class="chatbot-btn" style="background: #999;" onclick="backToMenu()">← Back to Menu</button>
+        `;
+    }
+    
+    function continueOnWhatsApp(message) {
+        window.open('https://wa.me/917992650041?text=' + encodeURIComponent(message), '_blank');
+    }
+    
+    function submitCallback() {
+        const phone = document.getElementById('phoneInput').value.trim();
+        const time = document.getElementById('timeInput').value.trim();
+        if (!phone || !time) {
+            alert('Please fill in all fields!');
+            return;
+        }
+        
+        // Send callback request to WhatsApp so you receive it
+        const callbackMessage = '📞 CALLBACK REQUEST\nPhone: ' + phone + '\nBest Time: ' + time + '\nCustomer Name: [Not provided]';
+        
+        // Send to your WhatsApp
+        fetch('https://wa.me/917992650041?text=' + encodeURIComponent(callbackMessage), { method: 'HEAD' }).catch(e => {
+            // Silently fail - message will be sent when user clicks the button
+        });
+        
+        addChatMessage('Thank you! Your callback request has been sent.');
+        addChatMessage('We will call you at ' + phone + ' around ' + time + '. 📞');
+        
+        const optionsDiv = document.getElementById('chatbotOptions');
+        optionsDiv.innerHTML = `
+            <button class="chatbot-btn" onclick="continueOnWhatsApp('CALLBACK REQUEST - Phone: ${phone}, Best Time: ${time}. Please call me back!')" style="background: #25D366;">📱 Confirm on WhatsApp</button>
+            <button class="chatbot-btn" style="background: #999;" onclick="backToMenu()">← Back to Menu</button>
+        `;
+    }
+</script>
