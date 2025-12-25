@@ -80,14 +80,14 @@
         .cat-item h4 { margin-top: 15px; font-size: 16px; font-weight: 600; }
 
         /* --- Products --- */
-        .product-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 40px 5%; }
-        .product-card { border: 1px solid #eee; border-radius: 12px; overflow: hidden; transition: 0.3s; background: white; }
+        .product-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 40px 5%; align-items: stretch; grid-auto-rows: 1fr; }
+        .product-card { border: 1px solid #eee; border-radius: 12px; overflow: hidden; transition: 0.3s; background: white; display: flex; flex-direction: column; height: 100%; }
         .product-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .product-card img { width: 100%; height: 280px; object-fit: cover; }
-        .p-info { padding: 20px; text-align: center; }
-        .p-info h3 { margin: 0 0 10px; font-size: 18px; }
+        .product-card img { width: 100%; height: 280px; object-fit: cover; flex: 0 0 auto; }
+        .p-info { padding: 20px; display: flex; flex-direction: column; justify-content: space-between; flex: 1 1 auto; }
+        .p-info h3 { margin: 0 0 10px; font-size: 18px; text-align: left; }
         .p-price { font-weight: bold; color: #1f5233; font-size: 22px; margin-bottom: 15px; }
-        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-group { display: flex; gap: 10px; margin-top: auto; align-items: center; }
         .btn-buy { background: #25D366; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; flex: 1; }
         .btn-buy:hover { background: #1ebe57; }
         .btn-cart { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; flex: 1; transition: 0.3s; }
@@ -121,7 +121,7 @@
 <header>
     <div class="nav-container">
         <a href="#" class="logo">
-            <img src="Images/logo_2.png" alt="Phoolwalle Logo" onerror="this.style.display='none'; this.parentNode.innerText='PHOOLWALLE'">
+            <img src="Images/Logo_2.PNG" alt="Phoolwalle Logo" onerror="this.style.display='none'; this.parentNode.innerText='PHOOLWALLE'">
         </a>
         <div class="nav-links">
             <a href="#home">Home</a>
@@ -180,9 +180,21 @@
             <img src="Images/Daily_puja.png" alt="Daily Puja Flowers Pack">
             <div class="p-info">
                 <h3>Daily Puja Flowers Pack</h3>
-                <div class="p-price">₹8.99/day</div>
+                <div class="p-price">₹8.50 / Day<br><span style="font-size:14px; font-weight:700; color:#374151;">₹249 / Month Subscription</span></div>
+
+                <div style="text-align:left; margin-top:12px; color:#374151; font-size:14px; line-height:1.5;">
+                    <p style="margin:6px 0; font-weight:700;">✨ What You Get Daily</p>
+                    <ul style="margin:0 0 8px 18px; padding:0;">
+                        <li>🌼 15–20 fresh puja flowers</li>
+                        <li>🌿 Tulsi Leaves &amp; Bela Patra included</li>
+                    </ul>
+                    <p style="margin:6px 0; font-weight:700;">🚚 Free Doorstep Delivery</p>
+                    <p style="margin:6px 0;">🌱 Fresh • Hygienic • Locally Sourced</p>
+                    <p style="margin:10px 0 0; font-weight:800; color:#16a34a;">🟢 Start Your Daily Puja, Hassle-Free</p>
+                </div>
+
                 <div class="btn-group">
-                    <button class="btn-cart" onclick="addToCart('Daily Puja Flowers Pack', '₹8.99/day')">
+                    <button class="btn-cart" onclick="addToCart('Daily Puja Flowers Pack (Monthly)', '₹249 / Month')">
                         <i class="fa fa-shopping-bag"></i> Add to Cart
                     </button>
                     <a href="https://wa.me/917992650041?text=I want to order Daily Puja Flowers" class="btn-buy" style="flex: 1; text-decoration: none;">
@@ -196,13 +208,26 @@
             <img src="Images/Decor_2.png" alt="Festive & Temple Decor">
             <div class="p-info">
                 <h3>Festive & Temple Décor</h3>
-                <div class="p-price">Custom Pricing</div>
+                <div class="p-price">Custom Pricing<br><span style="font-size:14px; font-weight:700; color:#374151;">On-site Quotation Available</span></div>
+
+                <div style="text-align:left; margin-top:12px; color:#374151; font-size:14px; line-height:1.5;">
+                    <p style="margin:6px 0; font-weight:700;">✨ What We Provide</p>
+                    <ul style="margin:0 0 8px 18px; padding:0;">
+                        <li>🎀 Garlands, Torans & Floral Backdrops</li>
+                        <li>🏵️ Stage & Temple Styling</li>
+                        <li>🌿 Eco-friendly materials & fresh blooms</li>
+                    </ul>
+                    <p style="margin:6px 0; font-weight:700;">🔧 Extras</p>
+                    <p style="margin:6px 0;">🚚 Installation available • Free site visit on request</p>
+                    <p style="margin:10px 0 0; font-weight:800; color:#16a34a;">🟢 Book a Consultation — Hassle-Free</p>
+                </div>
+
                 <div class="btn-group">
-                    <button class="btn-cart" onclick="addToCart('Festive & Temple Décor', 'Custom Pricing')">
+                    <button class="btn-cart" onclick="addToCart('Festive & Temple Décor (Inquiry)', 'Custom Pricing')">
                         <i class="fa fa-shopping-bag"></i> Add to Cart
                     </button>
                     <a href="https://wa.me/917992650041?text=I want Festive%20%26%20Temple%20Decor%20quote" class="btn-buy" style="flex: 1; text-decoration: none;">
-                        <i class="fab fa-whatsapp"></i> Order
+                        <i class="fab fa-whatsapp"></i> Request Quote
                     </a>
                 </div>
             </div>
@@ -212,9 +237,22 @@
             <img src="Images/Bouquet.png" alt="Handcrafted Bouquets">
             <div class="p-info">
                 <h3>Handcrafted Bouquets</h3>
-                <div class="p-price">From ₹399/- Onwards</div>
+                <div class="p-price">From ₹399/- Onwards<br><span style="font-size:14px; font-weight:700; color:#374151;">Designer wrapping & same-day delivery</span></div>
+
+                <div style="text-align:left; margin-top:12px; color:#374151; font-size:14px; line-height:1.5;">
+                    <p style="margin:6px 0; font-weight:700;">💐 What You Get</p>
+                    <ul style="margin:0 0 8px 18px; padding:0;">
+                        <li>🌸 Seasonal, premium blooms</li>
+                        <li>🎁 Elegant gift wrapping & ribbon</li>
+                        <li>🕒 Ready for gifting — same-day delivery</li>
+                    </ul>
+                    <p style="margin:6px 0;">✨ Perfect for anniversaries, gratitude, and celebrations.</p>
+                    <p style="margin:6px 0; font-weight:700;">🚚 Free Home Delivery</p>
+                    <p style="margin:10px 0 0; font-weight:800; color:#16a34a;">🟢 Send Joy — Fast & Fresh</p>
+                </div>
+
                 <div class="btn-group">
-                    <button class="btn-cart" onclick="addToCart('Handcrafted Bouquets', 'From ₹399/- Onwards')">
+                    <button class="btn-cart" onclick="addToCart('Handcrafted Bouquet', 'From ₹399/-')">
                         <i class="fa fa-shopping-bag"></i> Add to Cart
                     </button>
                     <a href="https://wa.me/917992650041?text=I want to order Handcrafted%20Bouquets" class="btn-buy" style="flex: 1; text-decoration: none;">
